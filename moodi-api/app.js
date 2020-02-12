@@ -4,6 +4,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var users = require('./routes/users');
+var files = require('./routes/convertFiles');
+
 
 var app = express();
 
@@ -12,5 +14,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser())
 
 app.use('/users', users);
+app.use('/files', files);
 
 module.exports = app;
