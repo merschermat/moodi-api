@@ -57,7 +57,7 @@ router.post('/', function (req, res, next) {
     }).then(file => {
 
         res.writeHead(200, {
-            "Content-Disposition": "attachment;filename=" + name + ".rar",
+            "Content-Disposition": "attachment;filename=" + name + ".zip",
         });
         res.end(new Buffer(file, 'binary'));
     })
