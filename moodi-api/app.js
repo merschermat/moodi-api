@@ -5,6 +5,10 @@ var bodyParser = require('body-parser');
 var cors = require('cors')
 var app = express();
 
+const data = require('./dao/connection');
+
+data.connectionOpen();
+
 app.use(cors({
     origin: "http://localhost:3000",
 }))
@@ -16,8 +20,8 @@ app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Credentials", "true")
     next();
 });
-var users = require('./routes/users');
-var files = require('./routes/convertFiles');
+var users = require('./controllers/User');
+var files = require('./controllers/convertFiles');
 
 
 
@@ -25,7 +29,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser())
 
-app.use('/users', users);
+app.use(users);
 app.use('/files', files);
 
 app.listen('4000')

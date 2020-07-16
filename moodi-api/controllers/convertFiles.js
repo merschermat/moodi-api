@@ -8,7 +8,7 @@ var JSZip = require("jszip");
 router.post('/', function (req, res, next) {
     var zip = JSZip();
 
-    const [data, name] = req.body.colections
+    const data = req.body.colections
 
     // let name = "moodi", data = [
     //     {
@@ -45,11 +45,20 @@ router.post('/', function (req, res, next) {
     //     }
     // ]
     for (var i = 0; data.length > i; i++) {
-
         colection = data[i]
-        console.log(colection);
+        let stringAux = ''
+        Object.keys(colection.atributes).forEach(a => { stringAux += `  ${a}:${colection.atributes[a]},\n` })
+        template = `  
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+      
+var ${colection.name}Schema = new Schema( {
+${stringAux}
+});
+module.exports =  mongoose.model('${colection.name}', ${colection.name}Schema);
+        `
         zip.folder('models')
-            .file(colection.name + ".js", JSON.stringify(colection.atributes));
+            .file(colection.name + ".js", template);
 
     }
     zip.generateAsync({
@@ -57,9 +66,10 @@ router.post('/', function (req, res, next) {
     }).then(file => {
 
         res.writeHead(200, {
-            "Content-Disposition": "attachment;filename=" + name + ".zip",
+            "Content-Disposition": "attachment;filename=models.zip",
         });
         res.end(new Buffer(file, 'binary'));
+
     })
 });
 
